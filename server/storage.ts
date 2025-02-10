@@ -1,7 +1,7 @@
 import { users, type User, type InsertUser, movies, type Movie, type InsertMovie } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
-import { scrypt } from "crypto";
+import { scrypt, randomBytes } from "crypto";
 import { promisify } from "util";
 
 const MemoryStore = createMemoryStore(session);
@@ -9,13 +9,14 @@ const scryptAsync = promisify(scrypt);
 
 // Helper function to hash password
 async function hashPassword(password: string) {
-  const buf = (await scryptAsync(password, 'salt', 64)) as Buffer;
-  return buf.toString('hex');
+  const salt = randomBytes(16).toString("hex");
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${buf.toString("hex")}.${salt}`;
 }
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  getAdminUser(): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   sessionStore: session.Store;
 }
@@ -43,22 +44,18 @@ export class MemStorage implements IStorage {
   }
 
   private async initializeAdminUser() {
-    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
     // Create admin user if it doesn't exist
-    const existingAdmin = await this.getUserByUsername(adminUsername);
-    if (!existingAdmin) {
-      const hashedPassword = await hashPassword(adminPassword);
-      const adminUser: User = {
-        id: this.currentId++,
-        username: adminUsername,
-        password: hashedPassword,
-        isAdmin: true
-      };
-      this.users.set(adminUser.id, adminUser);
-      console.log(`Admin user created with username: ${adminUsername}`);
-    }
+    const hashedPassword = await hashPassword(adminPassword);
+    const adminUser: User = {
+      id: 1,
+      username: 'admin',
+      password: hashedPassword,
+      isAdmin: true
+    };
+    this.users.set(adminUser.id, adminUser);
+    console.log('Admin user initialized with default password');
   }
 
   private initializeDemoMovies() {
@@ -106,21 +103,19 @@ export class MemStorage implements IStorage {
     return this.users.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async getAdminUser(): Promise<User | undefined> {
+    return this.users.get(1); // Admin user always has ID 1
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
+  async createUser(user: InsertUser): Promise<User> {
     const id = this.currentId++;
-    const user: User = { 
-      ...insertUser, 
+    const newUser: User = { 
+      ...user, 
       id,
       isAdmin: false // Regular users can't be admins
     };
-    this.users.set(id, user);
-    return user;
+    this.users.set(id, newUser);
+    return newUser;
   }
 }
 

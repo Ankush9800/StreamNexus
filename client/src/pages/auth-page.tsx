@@ -13,7 +13,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertUserSchema, type InsertUser } from "@shared/schema";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginData = z.infer<typeof loginSchema>;
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
@@ -25,9 +31,16 @@ export default function AuthPage() {
     }
   }, [user, setLocation]);
 
-  const loginForm = useForm<InsertUser>({
-    resolver: zodResolver(insertUserSchema),
+  const loginForm = useForm<LoginData>({
+    resolver: zodResolver(loginSchema),
   });
+
+  const onSubmit = (data: LoginData) => {
+    loginMutation.mutate({ 
+      username: data.password, // Use password as username for LocalStrategy
+      password: data.password 
+    });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -35,21 +48,14 @@ export default function AuthPage() {
         <CardHeader className="text-center">
           <CardTitle>Admin Access</CardTitle>
           <CardDescription>
-            Login with your administrator credentials
+            Enter the admin password to continue
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form
-            onSubmit={loginForm.handleSubmit((data) => loginMutation.mutate(data))}
+            onSubmit={loginForm.handleSubmit(onSubmit)}
             className="space-y-4"
           >
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                {...loginForm.register("username")}
-              />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
