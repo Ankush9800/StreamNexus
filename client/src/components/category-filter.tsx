@@ -8,7 +8,7 @@ interface CategoryFilterProps {
 
 export default function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-2">
+    <div className="flex justify-center flex-wrap gap-2 pb-4">
       <Button
         variant={selected === null ? "default" : "outline"}
         onClick={() => onSelect(null)}
