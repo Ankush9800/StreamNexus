@@ -15,8 +15,15 @@ export const movies = pgTable("movies", {
   description: text("description").notNull(),
   imageUrl: text("image_url").notNull(),
   downloadUrl: text("download_url").notNull(),
+  downloadUrl480p: text("download_url_480p"),
+  downloadUrl720p: text("download_url_720p"),
+  downloadUrl1080p: text("download_url_1080p"),
+  downloadUrl2160p: text("download_url_2160p"),
   category: text("category").notNull(),
   downloadCount: integer("download_count").default(0).notNull(),
+  language: text("language").default("English").notNull(),
+  releaseYear: text("release_year"),
+  rating: text("rating"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

@@ -4,25 +4,13 @@ import { getMovies } from "@/lib/movies";
 import { Movie } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Download, Star } from "lucide-react";
+import { Clock, Download, MessageCircle, Star } from "lucide-react";
 
-type DownloadQuality = "480p" | "720p" | "1080p" | "2160p";
-
-interface DownloadOption {
-  quality: DownloadQuality;
-  url: string;
-}
+const TELEGRAM_LINK = "https://t.me/movie_db1";
 
 export default function MovieDetailsPage() {
   const [, params] = useRoute("/movie/:id");
   const [movie, setMovie] = useState<Movie | null>(null);
-
-  // Mock download options - in real app, these would come from your backend
-  const downloadOptions: DownloadOption[] = [
-    { quality: "480p", url: movie?.downloadUrl || "" },
-    { quality: "720p", url: movie?.downloadUrl || "" },
-    { quality: "1080p", url: movie?.downloadUrl || "" },
-  ];
 
   useEffect(() => {
     if (params?.id) {
@@ -39,6 +27,13 @@ export default function MovieDetailsPage() {
       </div>
     );
   }
+
+  const downloadOptions = [
+    { quality: "480p", url: movie.downloadUrl480p },
+    { quality: "720p", url: movie.downloadUrl720p },
+    { quality: "1080p", url: movie.downloadUrl1080p },
+    { quality: "2160p", url: movie.downloadUrl2160p },
+  ].filter((option) => option.url); // Only show options with valid URLs
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -58,7 +53,7 @@ export default function MovieDetailsPage() {
               <h1 className="text-4xl font-bold">{movie.title}</h1>
               <div className="flex items-center text-muted-foreground">
                 <Clock className="w-4 h-4 mr-2" />
-                <time>Added 2 days ago</time>
+                <time>Added recently</time>
               </div>
             </div>
           </div>
@@ -66,6 +61,19 @@ export default function MovieDetailsPage() {
       </header>
 
       <main className="container max-w-6xl mx-auto py-8 px-4">
+        {/* Join Telegram Channel Button */}
+        <div className="mb-8 text-center">
+          <Button
+            variant="outline"
+            size="lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={() => window.open(TELEGRAM_LINK, "_blank")}
+          >
+            <MessageCircle className="mr-2 h-5 w-5" />
+            Join our Telegram Channel for Updates
+          </Button>
+        </div>
+
         {/* Movie Details Section */}
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Movie Details</h2>
@@ -76,18 +84,18 @@ export default function MovieDetailsPage() {
             </div>
             <div className="space-y-2">
               <p className="text-muted-foreground">Language</p>
-              <Badge variant="outline">English</Badge>
+              <Badge variant="outline">{movie.language}</Badge>
             </div>
             <div className="space-y-2">
               <p className="text-muted-foreground">Rating</p>
               <div className="flex items-center">
                 <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                <span>8.5/10</span>
+                <span>{movie.rating || "N/A"}</span>
               </div>
             </div>
             <div className="space-y-2">
               <p className="text-muted-foreground">Release Year</p>
-              <p>2024</p>
+              <p>{movie.releaseYear || "N/A"}</p>
             </div>
           </div>
         </section>
@@ -119,14 +127,14 @@ export default function MovieDetailsPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4">Download Options</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {downloadOptions.map((option) => (
+            {downloadOptions.map(({ quality, url }) => (
               <Button
-                key={option.quality}
+                key={quality}
                 className="w-full bg-green-600 hover:bg-green-700"
-                onClick={() => window.open(option.url, "_blank")}
+                onClick={() => window.open(url, "_blank")}
               >
                 <Download className="mr-2 h-4 w-4" />
-                Download {option.quality}
+                Download {quality}
               </Button>
             ))}
           </div>

@@ -1,10 +1,7 @@
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Info } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import type { Movie } from "@shared/schema";
-import { incrementDownload } from "@/lib/movies";
 import { Link } from "wouter";
 
 interface MovieCardProps {
@@ -12,20 +9,17 @@ interface MovieCardProps {
 }
 
 export default function MovieCard({ movie }: MovieCardProps) {
-  const handleDownload = () => {
-    incrementDownload(movie.id);
-    window.open(movie.downloadUrl, "_blank");
-  };
-
   return (
     <Card className="overflow-hidden group hover:shadow-lg transition-shadow">
-      <AspectRatio ratio={2/3}>
-        <img
-          src={movie.imageUrl}
-          alt={movie.title}
-          className="object-cover w-full h-full transition-transform group-hover:scale-105"
-        />
-      </AspectRatio>
+      <Link href={`/movie/${movie.id}`}>
+        <AspectRatio ratio={2/3}>
+          <img
+            src={movie.imageUrl}
+            alt={movie.title}
+            className="object-cover w-full h-full transition-transform group-hover:scale-105 cursor-pointer"
+          />
+        </AspectRatio>
+      </Link>
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-2">
           <h3 className="font-semibold line-clamp-1">{movie.title}</h3>
@@ -35,18 +29,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
           {movie.description}
         </p>
       </CardContent>
-      <CardFooter className="p-4 pt-0 grid grid-cols-2 gap-2">
-        <Link href={`/movie/${movie.id}`}>
-          <Button variant="outline" className="w-full">
-            <Info className="mr-2 h-4 w-4" />
-            Details
-          </Button>
-        </Link>
-        <Button onClick={handleDownload} className="w-full">
-          <Download className="mr-2 h-4 w-4" />
-          Download
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

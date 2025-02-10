@@ -33,7 +33,14 @@ export default function MovieForm({ initialData, onSubmit }: MovieFormProps) {
       description: "",
       imageUrl: "",
       downloadUrl: "",
+      downloadUrl480p: "",
+      downloadUrl720p: "",
+      downloadUrl1080p: "",
+      downloadUrl2160p: "",
       category: MOVIE_CATEGORIES[0],
+      language: "English",
+      releaseYear: new Date().getFullYear().toString(),
+      rating: "",
     },
   });
 
@@ -82,19 +89,65 @@ export default function MovieForm({ initialData, onSubmit }: MovieFormProps) {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="downloadUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Download URL</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="space-y-4">
+          <h3 className="font-medium">Download Links</h3>
+
+          <FormField
+            control={form.control}
+            name="downloadUrl480p"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>480p Download URL</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 480p" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="downloadUrl720p"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>720p Download URL</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 720p" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="downloadUrl1080p"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>1080p Download URL</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 1080p" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="downloadUrl2160p"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>4K (2160p) Download URL</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 4K" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -116,6 +169,48 @@ export default function MovieForm({ initialData, onSubmit }: MovieFormProps) {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="language"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Language</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="releaseYear"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Release Year</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="rating"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Rating</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value ?? ''} placeholder="e.g. 8.5/10" />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
