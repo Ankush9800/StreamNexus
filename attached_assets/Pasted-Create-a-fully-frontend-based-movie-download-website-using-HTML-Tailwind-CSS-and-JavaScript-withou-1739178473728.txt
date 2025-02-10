@@ -1,0 +1,44 @@
+Create a fully frontend-based movie download website using HTML, Tailwind CSS, and JavaScript without a backend. The website should:
+
+Display movies dynamically from a movies.json file using JavaScript fetch().
+Have a search bar to filter movies by name.
+Include categories (Action, Horror, Comedy, etc.) with JavaScript filtering.
+Show movie posters, titles, and download buttons with links from Google Drive, Mega, or OneDrive.
+Implement infinite scroll or pagination to load more movies dynamically.
+Use Tailwind CSS for a modern, Netflix-style UI with responsive design.
+Be fully mobile-friendly with a grid layout using Flexbox & CSS Grid.
+Support dark mode for a sleek look.
+Follow this folder structure:
+java
+Copy
+Edit
+/movie-website
+│── index.html  → Main Page
+│── movies.json → Movie Data (Title, Poster, Download Links)
+│── assets/
+│   ├── styles.css  → Tailwind Custom Styles (if needed)
+│   ├── script.js   → JavaScript Logic
+│   ├── images/     → Movie Posters
+│── README.md
+JavaScript should fetch movie data from movies.json, apply filters, and dynamically generate the UI.
+
+Build a responsive and interactive Admin Panel for a Movie Download Website using React, Tailwind CSS, and Local Storage (no backend).
+The panel should allow the admin to add, edit, delete, and manage movies with a user-friendly UI.
+
+🎬 Features:
+✔️ Movie Management: Upload movie posters, titles, descriptions, and download links
+✔️ Edit & Delete Movies: Modify or remove movies from the list
+✔️ Category & Genre Management: Add genres like Action, Comedy, Horror, etc.
+✔️ User Analytics (Frontend Only): Track downloads using Local Storage
+✔️ Dark/Light Mode: UI theme toggle
+✔️ Search & Filter: Search movies by title, genre, or rating
+✔️ Admin Authentication (Using .env): Secure login with credentials stored in .env
+✔️ Local Storage for Session Management: Remember admin login state
+✔️ Responsive UI: Mobile-friendly layout
+
+🛠️ Tech Stack:
+
+React.js (with Hooks & Context API)
+Tailwind CSS (for styling)
+Local Storage (to store movie data and admin login state)
+.env for storing admin credentials
