@@ -38,9 +38,11 @@ export const MOVIE_CATEGORIES = [
   "Action",
   "Comedy",
   "Drama",
-  "Horror",
-  "Sci-Fi",
+  "Mystery",
   "Adventure",
   "Romance",
   "Thriller",
+  "Bollywood",
+  "South",
+  "Web Series"
 ] as const;

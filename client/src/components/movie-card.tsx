@@ -2,9 +2,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
-import { Download } from "lucide-react";
+import { Download, Info } from "lucide-react";
 import type { Movie } from "@shared/schema";
 import { incrementDownload } from "@/lib/movies";
+import { Link } from "wouter";
 
 interface MovieCardProps {
   movie: Movie;
@@ -34,12 +35,14 @@ export default function MovieCard({ movie }: MovieCardProps) {
           {movie.description}
         </p>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <Button
-          onClick={handleDownload}
-          className="w-full"
-          variant="default"
-        >
+      <CardFooter className="p-4 pt-0 grid grid-cols-2 gap-2">
+        <Link href={`/movie/${movie.id}`}>
+          <Button variant="outline" className="w-full">
+            <Info className="mr-2 h-4 w-4" />
+            Details
+          </Button>
+        </Link>
+        <Button onClick={handleDownload} className="w-full">
           <Download className="mr-2 h-4 w-4" />
           Download
         </Button>
