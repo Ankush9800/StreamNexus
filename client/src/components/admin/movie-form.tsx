@@ -32,11 +32,16 @@ export default function MovieForm({ initialData, onSubmit }: MovieFormProps) {
       title: "",
       description: "",
       imageUrl: "",
+      screenshots: [],
       downloadUrl: "",
       downloadUrl480p: "",
       downloadUrl720p: "",
       downloadUrl1080p: "",
       downloadUrl2160p: "",
+      fileSize480p: "",
+      fileSize720p: "",
+      fileSize1080p: "",
+      fileSize2160p: "",
       category: MOVIE_CATEGORIES[0],
       language: "English",
       releaseYear: new Date().getFullYear().toString(),
@@ -46,7 +51,7 @@ export default function MovieForm({ initialData, onSubmit }: MovieFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto pr-4">
         <FormField
           control={form.control}
           name="title"
@@ -89,64 +94,158 @@ export default function MovieForm({ initialData, onSubmit }: MovieFormProps) {
           )}
         />
 
+        {/* Screenshots Section */}
+        <div className="space-y-4">
+          <h3 className="font-medium">Screenshots</h3>
+          <FormField
+            control={form.control}
+            name="screenshots"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Screenshot URLs (one per line)</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    {...field} 
+                    value={field.value?.join('\n') ?? ''} 
+                    onChange={(e) => {
+                      const urls = e.target.value
+                        .split('\n')
+                        .map(url => url.trim())
+                        .filter(url => url.length > 0);
+                      field.onChange(urls);
+                    }}
+                    placeholder="https://example.com/screenshot1.jpg&#10;https://example.com/screenshot2.jpg"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Download Links Section */}
         <div className="space-y-4">
           <h3 className="font-medium">Download Links</h3>
 
-          <FormField
-            control={form.control}
-            name="downloadUrl480p"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>480p Download URL</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 480p" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="downloadUrl480p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>480p Download URL</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 480p" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="downloadUrl720p"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>720p Download URL</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 720p" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="fileSize480p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>480p File Size</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="e.g. 700MB" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          <FormField
-            control={form.control}
-            name="downloadUrl1080p"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>1080p Download URL</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 1080p" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="downloadUrl720p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>720p Download URL</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 720p" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="downloadUrl2160p"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>4K (2160p) Download URL</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 4K" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="fileSize720p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>720p File Size</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="e.g. 1.2GB" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="downloadUrl1080p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>1080p Download URL</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 1080p" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="fileSize1080p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>1080p File Size</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="e.g. 2.5GB" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="downloadUrl2160p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>4K (2160p) Download URL</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="Google Drive link for 4K" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="fileSize2160p"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>4K File Size</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value ?? ''} placeholder="e.g. 8GB" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
 
         <FormField

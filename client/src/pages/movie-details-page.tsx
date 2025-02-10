@@ -29,11 +29,11 @@ export default function MovieDetailsPage() {
   }
 
   const downloadOptions = [
-    { quality: "480p", url: movie.downloadUrl480p },
-    { quality: "720p", url: movie.downloadUrl720p },
-    { quality: "1080p", url: movie.downloadUrl1080p },
-    { quality: "2160p", url: movie.downloadUrl2160p },
-  ].filter((option) => option.url); // Only show options with valid URLs
+    { quality: "480p", url: movie.downloadUrl480p, size: movie.fileSize480p, color: "bg-green-600 hover:bg-green-700" },
+    { quality: "720p", url: movie.downloadUrl720p, size: movie.fileSize720p, color: "bg-blue-600 hover:bg-blue-700" },
+    { quality: "1080p", url: movie.downloadUrl1080p, size: movie.fileSize1080p, color: "bg-purple-600 hover:bg-purple-700" },
+    { quality: "2160p", url: movie.downloadUrl2160p, size: movie.fileSize2160p, color: "bg-red-600 hover:bg-red-700" },
+  ].filter((option) => option.url);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -112,7 +112,7 @@ export default function MovieDetailsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Screenshots</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[movie.imageUrl, movie.imageUrl, movie.imageUrl].map((img, i) => (
+            {(movie.screenshots || [movie.imageUrl]).map((img, i) => (
               <img
                 key={i}
                 src={img}
@@ -127,14 +127,14 @@ export default function MovieDetailsPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4">Download Options</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {downloadOptions.map(({ quality, url }) => (
+            {downloadOptions.map(({ quality, url, size, color }) => (
               <Button
                 key={quality}
-                className="w-full bg-green-600 hover:bg-green-700"
+                className={`w-full ${color}`}
                 onClick={() => window.open(url, "_blank")}
               >
                 <Download className="mr-2 h-4 w-4" />
-                Download {quality}
+                {quality} {size ? `(${size})` : ""}
               </Button>
             ))}
           </div>
